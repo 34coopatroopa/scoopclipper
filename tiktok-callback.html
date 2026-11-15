@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>scoopclipper: finishing TikTok sign-in</title>
+<style>
+  body { font: 15px system-ui, sans-serif; background: #111; color: #eee; display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 16px; box-sizing: border-box; }
+  main { max-width: 420px; text-align: center; }
+  a { color: #9cf; }
+</style>
+</head>
+<body>
+<main>
+  <p id="msg">Finishing TikTok sign-in…</p>
+  <p><a id="go" href="#" hidden>Continue to scoopclipper</a></p>
+</main>
+<script>
+  // TikTok only redirects Web apps to https pages. This page hands the
+  // one-time sign-in result to scoopclipper running on this same computer
+  // (localhost) and nowhere else. Nothing is stored, logged or sent to any
+  // other site.
+  (function () {
+    var q = new URLSearchParams(location.search);
+    if (!q.has("code") && !q.has("error")) {
+      document.getElementById("msg").textContent = "Nothing to do here: this page only completes a TikTok sign-in.";
+      return;
+    }
+    var target = "http://localhost:8000/api/connect/tiktok/callback" + location.search;
+    var link = document.getElementById("go");
+    link.href = target;
+    link.hidden = false;
+    location.replace(target);
+  })();
+</script>
+</body>
+</html>
